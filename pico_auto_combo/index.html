@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+                <html>
+                    <head>
+                        <title>FightScript Configurator</title>
+                        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+                        <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+            <meta http-equiv="Pragma" content="no-cache">
+                        <style>
+                        html, body {
+                            height: 100%;
+                            margin: 0;
+                        }
+                            #head-bar{
+                                position: fixed;
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100px;
+                                background-color: rgb(12, 104, 98);
+                            }
+                            #title-box{
+                                margin-left: 70px;
+                                font-size: 30px;
+                                font-family: Google Sans,-apple-system,BlinkMacSystemFont,sans-serif;
+                                color: white;
+                            }
+                            #loaded-script{
+                                margin-left: 70px;
+                                font-size: 20px;
+                                font-family: Google Sans,-apple-system,BlinkMacSystemFont,sans-serif;
+                                color: white;
+                            }
+                            #main-body{
+                                background-color: #a1a1a1;
+                                height: 100%;
+                                width: 100%;
+                                max-height: 100%;
+                                max-width: 100%;
+
+                                display: flex;
+                                flex-direction: column;
+
+                            }
+                            #area-wrap{
+                                margin: 0;
+                                position: absolute;
+                                top: 50%;
+                                left: 25%;
+                                -ms-transform: translate(-25%, -50%);
+                                transform: translate(-25%, -50%);
+
+                            }
+                            #row-a, #row-b{
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                            }
+                            textarea{
+                                margin: 20px;
+                                padding: 10px
+                            }
+                            #file-name{
+                                height: 20px
+                            }
+
+
+
+
+                        </style>
+                    </head>
+                    <body>
+                        <header id="head-bar">
+                            <div id="title-box">FightScript Configurator</div>
+                        </header>
+                        <div id="main-body">
+                            <div id = "area-wrap">
+                                <input type="text" id ="file-name" name="file-name" placeholder="name of script">
+                                <button type="button" id="save-butt">Save</button>
+                                <button type="button" id="load-butt">Load</button>
+                                <input id='fileid' type='file' accept='.fscript' hidden/>
+                                <a id="shits" hidden></a>
+                                <button type="button" id="clear-butt">Clear Textfields</button>
+
+                        
+
+                            <form id="script-boxes" method="POST" action="/send">
+                                <div id="row-a">
+                                    <textarea id="script-a"  rows="10" cols="20"></textarea>
+                                    <textarea id="script-b"  rows="10" cols="20"></textarea>
+                                    <textarea id="script-c"  rows="10" cols="20"></textarea>
+                                    <textarea id="script-d"  rows="10" cols="20"></textarea>
+
+                                </div>
+                                <div id="row-b">
+                                    <textarea id="script-e"  rows="10" cols="20"></textarea>
+                                    <textarea id="script-f"  rows="10" cols="20"></textarea>
+                                    <textarea id="script-g"  rows="10" cols="20"></textarea>
+                                    <textarea id="script-h"  rows="10" cols="20"></textarea>
+                                    <div id="row-b-button-subrows">
+                                        <button type="button" id="upload-button">Upload</button>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="compiled" name="compiled" value="">
+                            </form>
+                            </div>
+                        </div>
+                    </body>
+                    <script>
+
+                    const decoder_obj = {
+                
+                    'A': "UHold",
+                    'B': "URel",
+                    'C': "UPress",
+                    'D': "DHold",
+                    'E': "DRel",
+                    'F': "DPress",
+                    'G': "LHold",
+                    'H': "LRel",
+                    'I': "LPress",
+                    'J': "RHold",
+                    'K': "RRel",
+                    'L': "RPress",
+                    'M': "AHold",
+                    'N': "ARel",
+                    'O': "APress",
+                    'P': "BHold",
+                    'Q': "BRel",
+                    'R': "BPress",
+                    'S': "XHold",
+                    'T': "XRel",
+                    'U': "XPress",
+                    'V': "YHold",
+                    'W': "YRel",
+                    'X': "YPress",
+                    'Y': "RBHold",
+                    'Z': "RBRel",
+                    'a': "RBPress",
+                    'b': "RTHold",
+                    'c': "RTRel",
+                    'd': "RTPress",
+                    'e': "LBHold",
+                    'f': "LBRel",
+                    'g': "LBPress",
+                    'h': "LTHold",
+                    'i': "LTRel",
+                    'j': "LTPress",
+                    'k': "QCF",
+                    'l': "QCB",
+                    'm': "RQCF",
+                    'n': "RQCB",
+                    'o': "HCF",
+                    'p': "HCB",
+                    'q': "HCFB",
+                    'r': "HCBF",
+                    's': "DP",
+                    't': "RDP",
+                    'u': "SPD",
+                    'v': "delay_frames",
+                    }
+                        
+                    const select = "";
+                            const loaded_script = "";
+    
+                    document.addEventListener("DOMContentLoaded", (event) => {
+
+
+
+                            if(select == "sent"){
+                                    loadScript(loaded_script, file_name);
+                                    setTimeout(function(){
+                                      alert("Script Sent!");
+                                      }, 0);
+                            }
+
+                        });
+
+                        function loadScript(script){
+
+                          const scripts = getScripts(script)
+
+
+                          document.getElementById("script-a").value = scripts[0];
+                          document.getElementById("script-b").value = scripts[1];
+                          document.getElementById("script-c").value = scripts[2];
+                          document.getElementById("script-d").value = scripts[3];
+                          document.getElementById("script-e").value = scripts[4];
+                          document.getElementById("script-f").value = scripts[5];
+                          document.getElementById("script-g").value = scripts[6];
+                          document.getElementById("script-h").value = scripts[7].slice(0, -1);
+                        }
+                  function getScripts(name){
+
+                    let temp_num = "";
+                    let temp = "";
+                    let store_scripts = [];
+
+                    for(var i = 0; i < name.length; i++){
+                        while(name.charAt(i) != ":" && i < name.length){
+                            if(isNum(name.charAt(i))){
+                                while(isNum(name.charAt(i)) &&  i < name.length){
+                                    temp_num += name.charAt(i);
+                                    i++;
+                                }
+                                temp_num += "\n";
+                                temp += temp_num;
+                                temp_num = "";
+                            }
+                            else{
+                                temp += decoder_obj[name.charAt(i)]+"\n";
+                                i++;
+                            }
+                        }
+                            temp = temp.replaceAll("undefined", "");
+                            if(select == "sent"){
+                                temp = temp.slice(0, -1);
+                            }
+                            store_scripts.push(temp);
+                            temp = "";
+                            temp_num ="";
+                    }
+
+                    return store_scripts;
+              }
+
+                        String.prototype.replaceAt = function(index, replacement) {
+                            return this.substring(0, index) +replacement+ this.substring(index + replacement.length);
+                        };
+
+                        const encoder_obj = {
+                                "UHold": 'A',
+                                "URel": 'B',
+                                "UPress": 'C',
+                                "DHold": 'D',
+                                "DRel": 'E',
+                                "DPress": 'F',
+                                "LHold": 'G',
+                                "LRel": 'H',
+                                "LPress": 'I',
+                                "RHold": 'J',
+                                "RRel": 'K',
+                                "RPress": 'L',
+                                "AHold": 'M',
+                                "ARel": 'N',
+                                "APress": 'O',
+                                "BHold": 'P',
+                                "BRel": 'Q',
+                                "BPress": 'R',
+                                "XHold": 'S',
+                                "XRel": 'T',
+                                "XPress": 'U',
+                                "YHold": 'V',
+                                "YRel": 'W',
+                                "YPress": 'X',
+                                "RBHold": 'Y',
+                                "RBRel": 'Z',
+                                "RBPress": 'a',
+                                "RTHold": 'b',
+                                "RTRel": 'c',
+                                "RTPress": 'd',
+                                "LBHold": 'e',
+                                "LBRel": 'f',
+                                "LBPress": 'g',
+                                "LTHold": 'h',
+                                "LTRel": 'i',
+                                "LTPress": 'j',
+                                "QCF": 'k',
+                                "QCB": 'l',
+                                "RQCF": 'm',
+                                "RQCB": 'n',
+                                "HCF": 'o',
+                                "HCB": 'p',
+                                "HCFB": 'q',
+                                "HCBF": 'r',
+                                "DP": 's',
+                                "RDP": 't',
+                                "SPD": 'u',
+                                "delay_frames": 'v',
+
+
+
+                        };
+
+                        document.getElementById("load-butt").addEventListener("click", load_script);
+                        document.getElementById("save-butt").addEventListener("click", save_script);
+                        document.getElementById("upload-button").addEventListener("click", submit);
+                        document.getElementById("clear-butt").addEventListener("click", clear_fields);
+                        document.getElementById('fileid').addEventListener("change", read_script);
+
+                        function clear_fields(){
+                          document.getElementById("script-a").value = "";
+                          document.getElementById("script-b").value = "";
+                          document.getElementById("script-c").value = "";
+                          document.getElementById("script-d").value = "";
+                          document.getElementById("script-e").value = "";
+                          document.getElementById("script-f").value = "";
+                          document.getElementById("script-g").value = "";
+                          document.getElementById("script-h").value = "";
+                        }
+
+                        function load_script(){
+  
+                            
+                                document.getElementById('fileid').click();
+            
+
+                        }
+                        function read_script(){
+                                
+                                let fr = new FileReader();
+                                        fr.onload = function () {
+                                            loadScript(fr.result);
+                                        }
+                        
+                                fr.readAsText(this.files[0]);
+                        }
+
+                        function save_script(){
+                            let file_name = document.getElementById("file-name").value;
+
+                            if(file_name != ""){
+                                let penis = document.getElementById("shits");
+                                shits.href = "data:application/xml;charset=utf-8,"+compile();
+                                shits.download = file_name+".fscript";
+                                shits.click()
+                            }
+                            else{
+                                alert("No name specified for file.");
+                            }
+                        }
+
+                        function compile(){
+                            
+    
+                            let script = "script-a";
+                            let compiled = "";
+
+
+
+                            for(var i = 0; i < 8; i++){
+
+                                let fightscript_args = document.getElementById(script).value.split("\n");
+                                if(fightscript_args.length > 512){
+                                    alert(script + " has too many arguments/lines (max: 512)");
+                                    return;
+                                }
+
+                                for(var j = 0; j < fightscript_args.length; j++){
+                                    if(encoder_obj[fightscript_args[j]]){
+                                        compiled += encoder_obj[fightscript_args[j]];
+                                    }
+                                    else if(isNum(fightscript_args[j]) && fightscript_args[j] != "" && fightscript_args[j].length < 5){
+                                        compiled += fightscript_args[j];
+                                    }
+                                    else if(fightscript_args[j] == ""){
+                                        //do nothing if box is empty or line is empty
+                                    }
+                                    else{
+                                        if(isNum(fightscript_args[j])){
+                                            alert( script + " has invalid command " + fightscript_args[j] +"(delay must not exceed 9999)");
+                                            return;
+                                        }
+                                        else{
+                                            alert( script + " has invalid command " + fightscript_args[j]);
+                                            return;
+                                        }
+                                    }
+                                }
+                                compiled += ":"
+                                script =  script.replaceAt(7, String.fromCharCode(script.charCodeAt(7) + 1));
+                            }
+
+
+                            compiled = compiled.slice(0, -1);
+                            return compiled;
+                            
+
+                        }
+
+                        function submit(){
+                            if(confirm("This will overwrite any profile of the same name, are you sure?")){
+                                document.getElementById("compiled").value = compile();
+                                document.getElementById("script-boxes").submit();
+                            }
+                        }
+
+                        function isNum(str){
+
+                            for(var i = 0; i < str.length; i++){
+                                let x = str.charCodeAt(i);
+
+                                if(!(x > 47 && x < 58)){
+                                    return false;
+                                }
+                            }
+
+                            return true;
+
+                        }
+
+                    </script>
+                </html>
